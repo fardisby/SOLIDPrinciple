@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Single responsibility principle %28SRP%29\" />
-  </ItemGroup>
-
 </Project>

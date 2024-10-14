@@ -1,11 +1,14 @@
-﻿using InitialProgram;
-using System.Drawing;
+﻿using System.Linq.Expressions;
+using UpdatedProgram;
 
 public class Program
 {
+    private static readonly BookStore _bookStore = new();
+    private static readonly BookPresenter _bookPresenter = new();
     public static void Main(string[] args)
     {
         var run = true;
+
         do
         {
             Console.Clear();
@@ -17,11 +20,12 @@ public class Program
             Console.WriteLine("5: Display a book somewhere else");
             Console.WriteLine("6: Create a book");
             Console.WriteLine("7: List all books");
-            //...
+
             Console.WriteLine("0: Exit");
 
             var input = Console.ReadLine();
             Console.Clear();
+
             try
             {
                 switch (input)
@@ -56,68 +60,77 @@ public class Program
                 }
                 Console.WriteLine("Press enter to go back to the main menu.");
                 Console.ReadLine();
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine("The following exception occured, press enter to continue:");
+                Console.WriteLine("The following exception occurred, press enter to continue:");
                 Console.WriteLine(ex);
                 Console.ReadLine();
             }
         } while (run);
+  
     }
 
     private static void FetchAndDisplayBook()
     {
-        var book = new Book(id: 1);
-        book.Load();
-        book.Display();
+        var book = _bookStore.Load(1);
+        _bookPresenter.Display(book!);
     }
 
     private static void FailToFetchBook()
     {
-        var book = new Book();
-        book.Load(); // Exception: You must set the Id to the Book Id you want to load.
-        book.Display();
+        // This cannot happen anymore,
+        // this has been fixed automatically.
+
     }
 
     private static void BookDoesNotExist()
     {
-        var book = new Book(id: 999);
-        book.Load();
-        book.Display();
+        var book = _bookStore.Load(999);
+
+        if(book == null)
+        {
+            // Book does not exist
+        }
+
     }
 
     private static void CreateOutOfOrderBook()
     {
         var book = new Book
         {
-            Id = 4, // this value is not enforced by anything and will be overriden at some point.
+            Id = 4,
             Title = "Some out of order book"
         };
-        book.Save();
-        book.Display();
+        _bookStore.Add(book);
+        _bookPresenter.Display(book);
     }
 
     private static void DisplayTheBookSomewhereElse()
     {
-        Console.WriteLine("Oops! Can't do that, the Display method only write to the \"Console\".");
-    }
+        Console.WriteLine("This is now possible, but we need a new Presenter; not 100% there yet!");
 
+    }
 
     private static void CreateBook()
     {
         Console.Clear();
         Console.WriteLine("Please enter the book title: ");
         var title = Console.ReadLine();
-        var book = new Book { Id = Book.NextId, Title = title };
-        book.Save();
+        var book = new Book { Title = title };
+        _bookStore.Add(book);
+
     }
 
     private static void ListAllBooks()
     {
-        foreach (var book in Book.Books)
+        foreach (var book in _bookStore.Books)
         {
-            book.Display();
+            _bookPresenter.Display(book);
         }
     }
+
 }
+
+
