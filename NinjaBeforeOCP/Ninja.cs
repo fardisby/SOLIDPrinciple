@@ -32,7 +32,8 @@ namespace NinjaBeforeOCP
             }
             else
             {
-                return new AttackResult(_shuriken, this, target);            }
+                return new AttackResult(_shuriken, this, target);
+            }
 
         }
     }
