@@ -33,6 +33,7 @@ namespace NinjaBeforeOCP
             else
             {
                 return new AttackResult(_shuriken, this, target);
+
             }
 
         }
